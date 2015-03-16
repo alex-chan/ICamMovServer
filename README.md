@@ -1,0 +1,1 @@
+Cloud code project for 魔视. Cloud Code Guide: https://cn.avoscloud.com/docs/cloud_code_guide.html

@@ -1,0 +1,104 @@
+<% title = user.get('nickname') + "的魔视 | 魔视" %>
+<% include _header %>
+<!-- Include the header partial and specify a title -->
+
+<!-- content -->
+<% include _brand %>
+<section class="content">
+    <div class="user-head">
+        <span class="avatar">
+            <img src="<%= user.get('avatar') %>" width="30px" height="30px"/>
+        </span>
+        <p class="nickname">
+            <%= user.get('nickname') %>
+        </p>
+
+    </div>
+
+    <div id="video-wrap" class="video-wrap" data-video="<%= video.get("videoFile").url() %>">
+
+        <!--<video id="video-play" webkit-playsinline  controls loop >-->
+            <!--Your browser does not support the <code>video</code> element.-->
+        <!--</video>-->
+        <img id="video-cover" class="video-cover" width="100%" src="<%= video.get("coverImage").url() %>">
+        <span class="btn-play">
+            <em class="play-layout"></em>
+            <em class="can-play"></em>
+        </span>
+    </div>
+
+
+
+
+
+</section>
+
+<script type="text/javascript">
+    Zepto(function($){
+        var videoWrap = $("#video-wrap");
+        var videoSrc = videoWrap.attr("data-video");
+        var videoBtn = $(".btn-play");
+        var video = undefined;
+
+
+        var hide = function(obj) {
+            obj.css("position", "absolute")
+                    .css("top", "-1000px");
+        }
+
+        videoWrap.on("click", function () {
+//            alert("click");
+
+            if( video === undefined ){
+                return ;
+            }
+
+            if( video[0].paused) {
+                videoBtn.hide();
+                video[0].play();
+            }else{
+                videoBtn.show();
+                video[0].pause();
+            }
+        });
+
+        videoBtn.one("click", function(){
+
+            // generate video object
+            video = $("<video/>").attr("src", videoSrc)
+                    .attr("webkit-playsinline","")
+                    .attr("loop", "loop");
+
+
+
+//                    .prependTo(videoWrap);
+            videoWrap.prepend(video);
+
+//            video.on("click", function(){
+//                this.pause();
+//
+//
+//            })
+
+            $(this).hide();
+
+            $("#video-cover").css("position", "absolute")
+                    .css("top", "-3000px");
+
+            video[0].play();
+
+
+//            videoWrap.prepend(video);
+
+            // hide the cover image
+
+            return false;
+
+
+        });
+    })
+</script>
+
+<!-- Include the footer partial -->
+<% include _footer %>
+
