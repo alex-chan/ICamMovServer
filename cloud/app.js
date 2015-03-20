@@ -1,4 +1,5 @@
 // 在 Cloud code 里初始化 Express 框架
+var model = require("cloud/model.js");
 var express = require('express');
 var app = express();
 
@@ -13,11 +14,11 @@ app.get('/hello', function(req, res) {
 });
 
 
-var _User = AV.Object.extend('_User');
-var Video = AV.Object.extend('Video');
+
+
 
 app.get("/videos/:vid", function(req, res){
-    var videoQuery = new AV.Query(Video);
+    var videoQuery = new AV.Query(model.Video);
 
     videoQuery.get(req.params.vid).then(function(video) {
 
