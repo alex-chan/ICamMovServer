@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>subtitles |AMDIN</title>
+</head>
+<body>
+<h1>Subtitles</h1>
+<ul>
+<% subtitles.forEach(function(subtitle) {%>
+    <li>
+        En:<%= subtitle.get("english") %>
+        Ch:<%= subtitle.get("chinese") %>
+    </li>
+<% }) %>
+</ul>
+<a href="/admin/addsubtitle">添加字幕</a>
+</body>
+</html>
