@@ -21,25 +21,34 @@ app.use(express.cookieParser('icammov cookie secure '));
 app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }, fetchUser: true}));
 
 // 管理入口
-function checkAdminRole(req){
+function checkAdminRole(req, res){
     if( ! req.AV.user ){
         var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
         res.redirect("/admin/login?came_from="+fullUrl);
     }
-    if(req.AV.user in  populate.adminRole.getUsers() ){
-        console.log("current user in admin role");
-    }else{
-        console.log(" not in admin role");
-    }
+
+    console.log(populate.adminRole.getUsers() )
+    //console.log("*")
+    //console.log(req.AV.user);
+
+    var query  = populate.adminRole.getUsers().query();
+    console.log(query);
+    //query.equalTo("users", req.AV.user);
+    query.find().done(function(r){
+        console.log("sb");
+        console.log(r);
+    }).fail(function(err){
+       console.log("fail"+ err.message);
+    });
+
 }
 
 app.get('/admin/subtitles', function(req, res){
 
-    checkAdminRole(req);
+    checkAdminRole(req, res);
 
     var query = new AV.Query(model.Subtitle );
     query.find().done(function(results){
-        console.log(results);
 
         res.render("admin/subtitles", {subtitles: results});
     }).fail( function(err){
@@ -49,18 +58,21 @@ app.get('/admin/subtitles', function(req, res){
 
 app.get('/admin/addsubtitle', function(req, res){
 
-    checkAdminRole(req);
+    checkAdminRole(req, res);
 
     res.render("admin/addsubtitle");
 });
 
 app.post("/admin/addsubtitle", function(req, res){
 
-    checkAdminRole(req);
+    checkAdminRole(req, res);
 
     var subtitle = new model.Subtitle();
-    subtitle.set("english", req.body.english);
-    subtitle.set("chinese", req.body.chinese);
+    var en = _.escape(req.body.english.replace("\r\n", "\n"));
+    var ch = _.escape(req.body.chinese.replace("\r\n", "\n"));
+
+    subtitle.set("english", en);
+    subtitle.set("chinese", ch);
     subtitle.save();
 
 
